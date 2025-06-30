@@ -14,6 +14,7 @@ struct Arguments{
 }
 
 impl Arguments {
+    /// Creates a new instance of the Argument struct. Error handling built in to ensure proper usage
     fn new(args: &[String]) -> Result<Self, &'static str> {
         let args_length = args.len();
         if args_length < 2 {
@@ -63,9 +64,17 @@ fn main() {
             process::exit(0);
         }
     });
-
+    // Number of threads to be used that was provided by the user
     let num_threads = args.threads;
     let (tx, rx) = channel();
+    // How this works if num_threads was equal to 10
+    //Thread 0: 1, 11, 21, 31,... 
+    //Thread 1: 2, 12, 22, 32.... 
+    //Thread 2: 3, 13, 23, 33.... 
+    //Thread 3: 4, 14, 24, 34.... 
+    //Thread 4: 5, 15, 25, 35.... 
+    //Etc.... 
+    //and there is no Thread 10
     for i in 0..num_threads {
         let tx = tx.clone();
 
